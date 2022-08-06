@@ -1,0 +1,4 @@
+rookies:
+  app:
+    jwtExpirationMs: 86400000
+    jwtSecret: rookiesSecretKey

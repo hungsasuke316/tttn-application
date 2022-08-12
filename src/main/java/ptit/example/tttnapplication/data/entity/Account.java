@@ -13,18 +13,20 @@ public class Account {
     @Id
     private String email;
     private String password;
+    private Boolean enable;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Roles roles;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "email")
+    @OneToOne
+    @JoinColumn(name = "email", referencedColumnName = "email")
     private Customer customer;
 
     @JsonIgnore
-//    @Transient
-    @OneToOne(mappedBy = "email", cascade=CascadeType.ALL)
+    @OneToOne
+    @JoinColumn(name = "email", referencedColumnName = "email")
     private Employee employee;
 
     @Override

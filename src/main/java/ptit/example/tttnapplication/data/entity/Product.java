@@ -15,30 +15,30 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer productId;
     private String name;
-    private Double price;
+    private Integer price;
     private String thumbnail;
     private String description;
     private Boolean status;
 
     @JsonIgnore
     @OneToMany (mappedBy = "product")
-    private Set<Rating> ratings;
+    private Set<Rating> rating;
 
     @JsonIgnore
     @OneToMany (mappedBy = "product")
-    private Set<Image> images;
+    private Set<Image> image;
 
     @JsonIgnore
     @OneToMany (mappedBy = "product")
-    private Set<Cart_Item> cartItems;
+    private Set<CartItem> cartItem;
 
     @JsonIgnore
     @OneToMany (mappedBy = "product")
-    private Set<Orders_Item> ordersItems;
+    private Set<OrdersItem> ordersItem;
 
     @JsonIgnore
     @OneToMany (mappedBy = "product")
-    private Set<Comment> comments;
+    private Set<Comment> comment;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

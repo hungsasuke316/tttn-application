@@ -11,7 +11,7 @@ import java.util.Date;
 @Setter
 public class Rating {
     @EmbeddedId
-    private Rating_ID id;
+    private RatingId id;
     private Integer rating;
     private Date ratingDate;
 

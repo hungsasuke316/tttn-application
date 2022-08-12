@@ -2,14 +2,14 @@ package ptit.example.tttnapplication.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;
-import ptit.example.tttnapplication.data.entity.Customer_Class;
+import ptit.example.tttnapplication.data.entity.CustomerClass;
 
 @Getter
 @Setter
 public class CustomerResponse {
-    private Integer customerId;
+    private String email;
     private String firstName;
     private String lastName;
     private Boolean enable;
-    private Customer_Class customerClass;
+    private CustomerClass customerClass;
 }

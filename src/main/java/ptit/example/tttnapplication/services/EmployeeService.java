@@ -1,6 +1,7 @@
 package ptit.example.tttnapplication.services;
 
 import org.springframework.stereotype.Service;
+import ptit.example.tttnapplication.data.entity.Account;
 import ptit.example.tttnapplication.data.entity.Employee;
 import ptit.example.tttnapplication.dto.request.EmployeesRequest;
 import ptit.example.tttnapplication.dto.response.EmployeeInformationResponse;
@@ -11,8 +12,8 @@ import java.util.List;
 @Service
 public interface EmployeeService {
     List<Employee> getAllEmployees();
-    EmployeesResponse getEmployeeByIdDto(Integer employeeId);
+    EmployeesResponse getEmployeeByIdDto(String email);
     EmployeeInformationResponse createEmployee(EmployeesRequest dto);
-    EmployeesResponse updateEmployee(Integer employeeId, EmployeesRequest dto);
-    EmployeesResponse deleteEmployee(Integer employeeId);
+    EmployeesResponse updateEmployee(String email, EmployeesRequest dto);
+    Account deleteEmployee(String email);
 }

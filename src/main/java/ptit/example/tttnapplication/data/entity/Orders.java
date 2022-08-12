@@ -15,18 +15,22 @@ public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer ordersId;
-    private Double total;
+    private Integer total;
     private Date ordersDate;
     private Integer statusOrder;
     private Boolean statusBill;
 
     @ManyToOne
     @JoinColumn(name = "address_id")
-    private Customer_Address customerAddress;
+    private CustomerAddress customerAddress;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
     @ManyToOne
     @JoinColumns({
@@ -41,5 +45,5 @@ public class Orders {
 
     @JsonIgnore
     @OneToMany(mappedBy = "orders")
-    private Set<Orders_Item> ordersItems;
+    private Set<OrdersItem> ordersItems;
 }

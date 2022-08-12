@@ -13,12 +13,13 @@ import java.util.Set;
 @Setter
 public class Coupon {
     @Id
-    private Coupon_ID couponId;
+    private CouponId couponId;
+    private Integer value;
     private Date endDate;
 
     @ManyToOne
     @JoinColumn(name = "class_id")
-    private Customer_Class customerClass;
+    private CustomerClass customerClass;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")

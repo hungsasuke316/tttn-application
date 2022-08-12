@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ptit.example.tttnapplication.data.entity.Category;
 import ptit.example.tttnapplication.data.repositpty.CategoryRepository;
-import ptit.example.tttnapplication.dto.request.CategoryRequestDto;
+import ptit.example.tttnapplication.dto.request.CategoryRequest;
 import ptit.example.tttnapplication.dto.response.CategoryResponse;
 import ptit.example.tttnapplication.exceptions.ResourceNotAcceptException;
 import ptit.example.tttnapplication.exceptions.ResourceNotFoundException;
@@ -41,7 +41,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryResponse createCategory(CategoryRequestDto dto) {
+    public CategoryResponse createCategory(CategoryRequest dto) {
         Optional<Category> categoryOptional = this.categoryRepository.findByName(dto.getName());
 
         if (categoryOptional.isPresent()){
@@ -54,7 +54,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryResponse updateCategory(Integer categoryId, CategoryRequestDto dto) {
+    public CategoryResponse updateCategory(Integer categoryId, CategoryRequest dto) {
         Category category = categoryRepository.findById(categoryId).get();
         modelMapper.map(dto,category);
         category = categoryRepository.save(category);

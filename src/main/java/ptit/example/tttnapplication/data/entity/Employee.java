@@ -13,19 +13,17 @@ import java.util.Set;
 @Setter
 public class Employee {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer employeeId;
+    private String email;
     private String firstName;
     private String lastName;
     private Integer nationalIdentityCard;
     private Date dateOfBirth;
     private String address;
     private Integer phone;
-    private Boolean enable;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "email", referencedColumnName = "email")
-    private Account email;
+    @JsonIgnore
+    @OneToOne(mappedBy = "employee")
+    private Account employee;
 
     @JsonIgnore
     @OneToMany(mappedBy = "employee")
@@ -34,5 +32,4 @@ public class Employee {
     @JsonIgnore
     @OneToMany (mappedBy = "employee")
     private Set<Coupon> coupon;
-
 }

@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ptit.example.tttnapplication.dto.response.ErrorResponse;
-import ptit.example.tttnapplication.exceptions.ResourceNotAcceptException;
-import ptit.example.tttnapplication.exceptions.ResourceNotFoundException;
+import ptit.example.tttnapplication.exceptions.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,22 +18,40 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({ ResourceNotFoundException.class })
-    protected ResponseEntity<ErrorResponse> handleCategoryNotFoundException(RuntimeException exception, WebRequest request) {
+    protected ResponseEntity<ErrorResponse> handleCategoryNotFoundException(RuntimeException exception) {
         ErrorResponse error = new ErrorResponse("404", exception.getMessage());
-        return new ResponseEntity<ErrorResponse>(error, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({ ResourceNotAcceptException.class })
-    protected ResponseEntity<ErrorResponse> handleCategoryNotAcceptException(RuntimeException exception, WebRequest request) {
+    protected ResponseEntity<ErrorResponse> handleCategoryNotAcceptException(RuntimeException exception) {
         ErrorResponse error = new ErrorResponse("406", exception.getMessage());
-        return new ResponseEntity<ErrorResponse>(error, HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(error, HttpStatus.NOT_ACCEPTABLE);
     }
 
     @ExceptionHandler({ IllegalArgumentException.class })
-    protected ResponseEntity<ErrorResponse> handleIllegalArgumentException(RuntimeException exception,
-                                                                           WebRequest request) {
+    protected ResponseEntity<ErrorResponse> handleIllegalArgumentException(RuntimeException exception) {
         ErrorResponse error = new ErrorResponse("400", exception.getMessage());
-        return new ResponseEntity<ErrorResponse>(error, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({UnauthorizedException.class})
+    protected ResponseEntity<ErrorResponse> handleUnauthorizedException(RuntimeException exception) {
+        ErrorResponse error = new ErrorResponse("401", exception.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
+
+    @ExceptionHandler({BadRequestException.class})
+    protected ResponseEntity<ErrorResponse> handleBadRequestException(RuntimeException exception) {
+        ErrorResponse error = new ErrorResponse("400", exception.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({InternalServerException.class})
+    protected ResponseEntity<ErrorResponse> handleInternalServerException(RuntimeException exception) {
+        ErrorResponse error = new ErrorResponse("500", exception.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
@@ -47,6 +64,6 @@ public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
         ErrorResponse error = new ErrorResponse("400", "Validation Error", errors);
-        return new ResponseEntity<Object>(error, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 }

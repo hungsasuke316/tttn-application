@@ -12,33 +12,34 @@ import java.util.Set;
 @Setter
 public class Customer {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer customerId;
+    private String email;
     private String firstName;
     private String lastName;
-    private Boolean enable;
 
     @ManyToOne
     @JoinColumn(name = "class_id")
-    private Customer_Class customerClass;
+    private CustomerClass customerClass;
 
-    @OneToOne
-    @JoinColumn(name = "email", referencedColumnName = "email")
-    private Account email;
+    @OneToOne(mappedBy = "customer")
+    private Account customer;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "customer")
-    private Set<Customer_Address> customerAddress;
+    @OneToOne(mappedBy = "customer")
+    private Cart cart;
 
     @JsonIgnore
     @OneToMany(mappedBy = "customer")
-    private Set<Comment> comments;
+    private Set<CustomerAddress> customerAddress;
 
     @JsonIgnore
     @OneToMany(mappedBy = "customer")
-    private Set<Rating> ratings;
+    private Set<Comment> comment;
 
     @JsonIgnore
     @OneToMany(mappedBy = "customer")
-    private Set<Cart> carts;
+    private Set<Rating> rating;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "customer")
+    private Set<Orders> orders;
+
 }

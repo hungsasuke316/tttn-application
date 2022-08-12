@@ -43,8 +43,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeesResponse getEmployeeByIdDto(Integer employeeId) {
-        Optional<Employee> employeeOptional = this.employeeRepository.findById(employeeId);
+    public EmployeesResponse getEmployeeByIdDto(String email) {
+        Optional<Employee> employeeOptional = this.employeeRepository.findByEmail(email);
 
         if (employeeOptional.isPresent()) {
             Employee employee = employeeOptional.get();
@@ -69,12 +69,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         Roles roles = this.rolesRepository.findByName("employee");
         account.setRoles(roles);
+        account.setEnable(true);
         System.out.println(account.toString());
         Account saveAccount =accountRepository.save(account);
 
         Employee employee = modelMapper.map(dto, Employee.class);
-        employee.setEnable(true);
-        employee.setEmail(saveAccount);
+        employee.setEmployee(saveAccount);
         Employee saveEmployee =employeeRepository.save(employee);
         EmployeesResponse employeesResponse = modelMapper.map(saveEmployee, EmployeesResponse.class);
 
@@ -84,29 +84,38 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeesResponse updateEmployee(Integer employeeId, EmployeesRequest dto) {
-        Employee employee = employeeRepository.findById(employeeId).get();
+    public EmployeesResponse updateEmployee(String email, EmployeesRequest dto) {
+        Optional<Employee> employeeOptional = this.employeeRepository.findByEmail(email);
 
-        dto.setEmail(employee.getEmail().getEmail());
-        dto.setPassword(employee.getEmail().getPassword());
+        if (!employeeOptional.isPresent()) {
+            throw new ResourceNotFoundException("Not Found Email: " + email);
+        }
+        Employee employee = employeeOptional.get();
+        dto.setEmail(employee.getEmail());
+        dto.setPassword(employee.getEmployee().getPassword());
         modelMapper.map(dto,employee);
         employeeRepository.save(employee);
         return  modelMapper.map(employee, EmployeesResponse.class);
     }
 
     @Override
-    public EmployeesResponse deleteEmployee(Integer employeeId) {
-        Employee employee = employeeRepository.findById(employeeId).get();
+    public Account deleteEmployee(String email) {
+        Optional<Account> employeeOptional = accountRepository.findByEmail(email);
 
+        if (!employeeOptional.isPresent()) {
+            throw new ResourceNotFoundException("Not Found Email: " + email);
+        }
+
+        Account employee = employeeOptional.get();
         if(employee.getEnable().equals(true)){
             employee.setEnable(false);
-            employee = employeeRepository.save(employee);
+            employee = accountRepository.save(employee);
         }
         else if(employee.getEnable().equals(false)){
             employee.setEnable(true);
-            employee = employeeRepository.save(employee);
+            employee = accountRepository.save(employee);
         }
 
-        return  modelMapper.map(employee, EmployeesResponse.class);
+        return  modelMapper.map(employee, Account.class);
     }
 }

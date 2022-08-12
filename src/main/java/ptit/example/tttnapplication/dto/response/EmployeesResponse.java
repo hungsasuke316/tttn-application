@@ -9,13 +9,11 @@ import java.util.Date;
 @Getter
 @Setter
 public class EmployeesResponse {
-    private Integer employeeId;
+    private String email;
     private String firstName;
     private String lastName;
     private Integer nationalIdentityCard;
     private Date dateOfBirth;
     private String address;
     private Integer phone;
-    private Boolean enable;
-    private Account email;
 }

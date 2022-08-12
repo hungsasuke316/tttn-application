@@ -1,7 +1,7 @@
 package ptit.example.tttnapplication.services.impl;
 
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,14 +9,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ptit.example.tttnapplication.data.entity.Account;
-import ptit.example.tttnapplication.data.entity.Customer;
-import ptit.example.tttnapplication.data.entity.Customer_Class;
-import ptit.example.tttnapplication.data.entity.Roles;
-import ptit.example.tttnapplication.data.repositpty.AccountRepository;
-import ptit.example.tttnapplication.data.repositpty.CustomerClassRepository;
-import ptit.example.tttnapplication.data.repositpty.CustomerRepository;
-import ptit.example.tttnapplication.data.repositpty.RolesRepository;
+import ptit.example.tttnapplication.data.entity.*;
+import ptit.example.tttnapplication.data.repositpty.*;
 
 import ptit.example.tttnapplication.dto.request.LoginRequest;
 import ptit.example.tttnapplication.dto.request.RegisterRequest;
@@ -31,27 +25,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Service
 public class RegisterServiceImpl implements RegisterService {
     private final AccountRepository accountRepository;
     private final RolesRepository rolesRepository;
     private final CustomerRepository customerRepository;
     private final CustomerClassRepository customerClassRepository;
+
+    private final CartRepository cartRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
-    @Autowired
-    public RegisterServiceImpl(AccountRepository accountRepository, RolesRepository rolesRepository, CustomerRepository customerRepository, CustomerClassRepository customerClassRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
-        this.accountRepository = accountRepository;
-        this.rolesRepository = rolesRepository;
-        this.customerRepository = customerRepository;
-        this.customerClassRepository = customerClassRepository;
-        this.modelMapper = modelMapper;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-        this.jwtUtils = jwtUtils;
-    }
     @Override
     public RegisterResponse signUpUser(RegisterRequest dto) {
         Optional<Account> accountOptional = this.accountRepository.findById(dto.getEmail());
@@ -63,21 +49,22 @@ public class RegisterServiceImpl implements RegisterService {
         dto.setPassword(passwordEncoder.encode(dto.getPassword()));
 
         Account account = modelMapper.map(dto, Account.class);
-        System.out.println("mapper:" + account.toString());
         Customer customer = modelMapper.map(dto, Customer.class);
 
         Roles roles = this.rolesRepository.findByName("customer");
         account.setRoles(roles);
-        System.out.println("==============="+account.toString());
+        account.setEnable(true);
         Account saveAccount =accountRepository.save(account);
 
-        Customer_Class customerClass = this.customerClassRepository.findByName("new");
-        customer.setEnable(true);
+        CustomerClass customerClass = this.customerClassRepository.findByName("new");
         customer.setCustomerClass(customerClass);
-
-        customer.setEmail(saveAccount);
+        customer.setCustomer(saveAccount);
         Customer saveCustomer = customerRepository.save(customer);
         CustomerResponse customerResponse = modelMapper.map(saveCustomer, CustomerResponse.class);
+
+        Cart cart = new Cart();
+        cart.setCustomer(customer);
+        cartRepository.save(cart);
 
         RegisterResponse registerResponse = modelMapper.map(saveAccount, RegisterResponse.class);
         registerResponse.setCustomerResponse(customerResponse);

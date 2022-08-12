@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ptit.example.tttnapplication.data.entity.Product;
 import ptit.example.tttnapplication.data.repositpty.ProductRepository;
-import ptit.example.tttnapplication.dto.request.ProductRequestDto;
+import ptit.example.tttnapplication.dto.request.ProductRequest;
 import ptit.example.tttnapplication.dto.response.ProductResponse;
 import ptit.example.tttnapplication.exceptions.ResourceNotAcceptException;
 import ptit.example.tttnapplication.exceptions.ResourceNotFoundException;
@@ -40,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse createProduct(ProductRequestDto dto) {
+    public ProductResponse createProduct(ProductRequest dto) {
         Optional<Product> productOptional = this.productRepository.findByName(dto.getName());
 
         if (productOptional.isPresent()){
@@ -53,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse updateProduct(Integer productId, ProductRequestDto dto) {
+    public ProductResponse updateProduct(Integer productId, ProductRequest dto) {
         Product product = productRepository.findById(productId).get();
         modelMapper.map(dto,product);
         product = productRepository.save(product);
